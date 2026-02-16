@@ -1,6 +1,6 @@
-# Montaža Bojlera Addon
+# Boiler Installation Addon
 
-WordPress plugin for WooCommerce that adds boiler installation service as an addon for products.
+WordPress plugin for WooCommerce that adds a boiler installation service as an addon for products.
 
 ## Description
 
@@ -26,11 +26,11 @@ This plugin allows you to offer boiler installation and delivery service as an o
 
 1. Upload the `montaza-bojlera-addon.php` file to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to 'Montaža Bojlera' in the admin menu to configure settings
+3. Go to 'Boiler Installation' in the admin menu to configure settings
 
 ## Configuration
 
-After activation, go to **Montaža Bojlera** in the WordPress admin menu to configure:
+After activation, go to **Boiler Installation** in the WordPress admin menu to configure:
 
 - **Service Price**: Set the price for boiler installation service
 - **Delivery Time - Minimum**: Minimum number of delivery days
@@ -97,4 +97,3 @@ For issues or questions, please contact the plugin author.
 ## License
 
 This plugin is provided as-is for use with your WordPress/WooCommerce installation.
-

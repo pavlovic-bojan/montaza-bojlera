@@ -1,7 +1,7 @@
 <?php
 /*
-Plugin Name: Montaža Bojlera
-Description: Dodaje montažu bojlera kao dodatak za svaki proizvod. Checkbox na stranici proizvoda dodaje uslugu u stavku korpe. Administrator može da postavi cenu.
+Plugin Name: Boiler Installation Addon
+Description: Adds a boiler installation and delivery service as an addon for each product. A checkbox on the product page adds the service to the cart item. The administrator can configure the price.
 Version: 1.0
 Author: Bojan Pavlovć
 */
@@ -12,7 +12,7 @@ if (!defined('ABSPATH')) exit;
 add_action('plugins_loaded', function() {
     if (!class_exists('WooCommerce')) {
         add_action('admin_notices', function() {
-            echo '<div class="error"><p>Plugin "Montaža Bojlera" zahteva WooCommerce. Molimo aktivirajte WooCommerce.</p></div>';
+            echo '<div class="error"><p>The \"Boiler Installation Addon\" plugin requires WooCommerce. Please activate WooCommerce.</p></div>';
         });
         return;
     }
@@ -25,7 +25,7 @@ add_action('plugins_loaded', function() {
 register_activation_hook(__FILE__, function() {
     if (!class_exists('WooCommerce')) {
         deactivate_plugins(plugin_basename(__FILE__));
-        wp_die('Ovaj plugin zahteva WooCommerce. Molimo aktivirajte WooCommerce prvo.');
+        wp_die('This plugin requires WooCommerce. Please activate WooCommerce first.');
     }
     if (get_option('wm_montaza_price') === false) {
         add_option('wm_montaza_price', 7800);
@@ -52,7 +52,7 @@ function wm_montaza_settings_page() {
         update_option('wm_montaza_price', floatval($_POST['wm_montaza_price']));
         update_option('wm_montaza_delivery_min', intval($_POST['wm_montaza_delivery_min']));
         update_option('wm_montaza_delivery_max', intval($_POST['wm_montaza_delivery_max']));
-        echo '<div class="updated"><p>Podešavanja su sačuvana.</p></div>';
+        echo '<div class="updated"><p>Settings saved.</p></div>';
     }
     $price = get_option('wm_montaza_price', 7800);
     $delivery_min = get_option('wm_montaza_delivery_min', 1);
@@ -60,12 +60,12 @@ function wm_montaza_settings_page() {
     $currency = function_exists('get_woocommerce_currency') ? get_woocommerce_currency() : 'RSD';
     ?>
     <div class="wrap">
-        <h1>Montaža Bojlera - Podešavanja</h1>
+        <h1>Boiler Installation - Settings</h1>
         <form method="post">
             <table class="form-table">
                 <tr>
                     <th scope="row">
-                        <label for="wm_montaza_price">Cena montaže:</label>
+                        <label for="wm_montaza_price">Installation price:</label>
                     </th>
                     <td>
                         <input type="number" name="wm_montaza_price" id="wm_montaza_price" value="<?php echo esc_attr($price); ?>" step="1" /> <?php echo esc_html($currency); ?>
@@ -73,7 +73,7 @@ function wm_montaza_settings_page() {
                 </tr>
                 <tr>
                     <th scope="row">
-                        <label for="wm_montaza_delivery_min">Vreme dostave - minimum (dana):</label>
+                        <label for="wm_montaza_delivery_min">Delivery time - minimum (days):</label>
                     </th>
                     <td>
                         <input type="number" name="wm_montaza_delivery_min" id="wm_montaza_delivery_min" value="<?php echo esc_attr($delivery_min); ?>" step="1" min="1" />
@@ -81,7 +81,7 @@ function wm_montaza_settings_page() {
                 </tr>
                 <tr>
                     <th scope="row">
-                        <label for="wm_montaza_delivery_max">Vreme dostave - maximum (dana):</label>
+                        <label for="wm_montaza_delivery_max">Delivery time - maximum (days):</label>
                     </th>
                     <td>
                         <input type="number" name="wm_montaza_delivery_max" id="wm_montaza_delivery_max" value="<?php echo esc_attr($delivery_max); ?>" step="1" min="1" />
@@ -89,7 +89,7 @@ function wm_montaza_settings_page() {
                 </tr>
             </table>
             <p class="submit">
-                <input type="submit" class="button button-primary" value="Sačuvaj" />
+                <input type="submit" class="button button-primary" value="Save" />
             </p>
         </form>
     </div>
@@ -101,8 +101,8 @@ function wm_montaza_init() {
     // Admin menu
     add_action('admin_menu', function() {
         add_menu_page(
-            'Montaža Bojlera',
-            'Montaža Bojlera',
+            'Boiler Installation',
+            'Boiler Installation',
             'manage_options',
             'wm-montaza-settings',
             'wm_montaza_settings_page',
@@ -124,11 +124,11 @@ function wm_montaza_init() {
         <div class="wm-montaza-checkbox" style="margin-bottom:10px;">
             <label>
                 <input type="checkbox" name="wm_montaza" id="wm_montaza_checkbox" value="1" /> 
-                Montaža i dostava bojlera +<?php echo number_format($price, 0, ',', '.'); ?> <?php echo esc_html($currency); ?>
+                Boiler installation and delivery +<?php echo number_format($price, 0, ',', '.'); ?> <?php echo esc_html($currency); ?>
                 <br>
-                <small><strong>Vreme dostave: <?php echo esc_html($delivery_min); ?>-<?php echo esc_html($delivery_max); ?> radnih dana.</strong></small>
+                <small><strong>Delivery time: <?php echo esc_html($delivery_min); ?>–<?php echo esc_html($delivery_max); ?> business days.</strong></small>
                 <br>
-                <small>Montaža i dostava dostupna samo u Beogradu. U cenu uključena demontaža starog bojlera. <strong style="color:#d32f2f;">Nosači i inox creva nisu uključeni.</strong></small>
+                <small>Installation and delivery are available only in Belgrade. The price includes removal of the old boiler. <strong style="color:#d32f2f;">Mounting brackets and inox hoses are not included.</strong></small>
             </label>
         </div>
         <?php
@@ -226,12 +226,12 @@ function wm_montaza_init() {
                                    data-cart-key="<?php echo esc_attr($cart_item_key); ?>"
                                    value="1" />
                             <span>
-                                <strong>Dodaj montažu i dostavu bojlera</strong>
+                                <strong>Add boiler installation and delivery</strong>
                                 (+<?php echo number_format($price, 0, ',', '.'); ?> <?php echo esc_html($currency); ?>)
                                 <br>
-                                <small><strong>Vreme dostave: <?php echo esc_html($delivery_min); ?>-<?php echo esc_html($delivery_max); ?> radnih dana.</strong></small>
+                                <small><strong>Delivery time: <?php echo esc_html($delivery_min); ?>–<?php echo esc_html($delivery_max); ?> business days.</strong></small>
                                 <br>
-                                <small style="color:#666;">Montaža i dostava dostupna samo u Beogradu. U cenu uključena demontaža starog bojlera. <strong style="color:#d32f2f;">Nosači i inox creva nisu uključeni.</strong></small>
+                                <small style="color:#666;">Installation and delivery are available only in Belgrade. The price includes removal of the old boiler. <strong style="color:#d32f2f;">Mounting brackets and inox hoses are not included.</strong></small>
                             </span>
                         </label>
                     </td>
@@ -246,11 +246,11 @@ function wm_montaza_init() {
     add_action('wp_ajax_nopriv_wm_add_montaza_checkout', 'wm_add_montaza_checkout');
     function wm_add_montaza_checkout() {
         if (!function_exists('WC') || !class_exists('WooCommerce')) {
-            wp_send_json_error('WooCommerce nije aktivan');
+            wp_send_json_error('WooCommerce is not active.');
         }
         
         if (!isset($_POST['cart_key']) || !isset($_POST['checked'])) {
-            wp_send_json_error('Nedostaju parametri');
+            wp_send_json_error('Missing parameters.');
         }
         
         $cart = WC()->cart;
@@ -259,7 +259,7 @@ function wm_montaza_init() {
         
         $cart_item = $cart->get_cart_item($cart_key);
         if (!$cart_item) {
-            wp_send_json_error('Proizvod nije pronađen u korpi');
+            wp_send_json_error('The product was not found in the cart.');
         }
         
         if ($checked) {
@@ -280,7 +280,7 @@ function wm_montaza_init() {
         $cart->calculate_totals();
         
         wp_send_json_success(array(
-            'message' => 'Uspešno ažurirano',
+            'message' => 'Successfully updated.',
             'total' => $cart->get_total()
         ));
     }
@@ -311,13 +311,13 @@ function wm_montaza_init() {
                             // Reload checkout to update totals
                             $('body').trigger('update_checkout');
                         } else {
-                            alert('Greška: ' + response.data);
+                            alert('Error: ' + response.data);
                             checkbox.prop('checked', !checked);
                         }
                         checkbox.prop('disabled', false);
                     },
                     error: function() {
-                        alert('Došlo je do greške. Molimo osvežite stranicu.');
+                        alert('An error occurred. Please refresh the page.');
                         checkbox.prop('checked', !checked);
                         checkbox.prop('disabled', false);
                     }
@@ -334,7 +334,7 @@ function wm_montaza_init() {
         if (isset($values['wm_montaza']) && $values['wm_montaza']) {
             $montaza_price = isset($values['wm_montaza_price']) ? $values['wm_montaza_price'] : get_option('wm_montaza_price', 7800);
             $currency = function_exists('get_woocommerce_currency') ? get_woocommerce_currency() : 'RSD';
-            $item->add_meta_data('Montaža bojlera', number_format($montaza_price, 0, ',', '.') . ' ' . esc_html($currency));
+            $item->add_meta_data('Boiler installation', number_format($montaza_price, 0, ',', '.') . ' ' . esc_html($currency));
         }
     }, 10, 4);
 
@@ -347,9 +347,9 @@ function wm_montaza_init() {
         $currency = function_exists('get_woocommerce_currency') ? get_woocommerce_currency() : 'RSD';
         
         $output = '<div class="wm-montaza-info" style="margin:15px 0;padding:15px;background:#f9f9f9;border-left:3px solid #d32f2f;">';
-        $output .= '<p style="margin:0 0 10px 0;"><strong>Montaža i dostava bojlera: ' . number_format($price, 0, ',', '.') . ' ' . esc_html($currency) . '</strong></p>';
-        $output .= '<p style="margin:0 0 10px 0;"><strong>Vreme dostave: ' . esc_html($delivery_min) . '-' . esc_html($delivery_max) . ' radnih dana.</strong></p>';
-        $output .= '<p style="margin:0;font-size:14px;color:#666;">Montaža i dostava dostupna samo u Beogradu. U cenu uključena demontaža starog bojlera. <strong style="color:#d32f2f;">Nosači i inox creva nisu uključeni.</strong></p>';
+        $output .= '<p style="margin:0 0 10px 0;"><strong>Boiler installation and delivery: ' . number_format($price, 0, ',', '.') . ' ' . esc_html($currency) . '</strong></p>';
+        $output .= '<p style="margin:0 0 10px 0;"><strong>Delivery time: ' . esc_html($delivery_min) . '-' . esc_html($delivery_max) . ' business days.</strong></p>';
+        $output .= '<p style="margin:0;font-size:14px;color:#666;">Installation and delivery are available only in Belgrade. The price includes removal of the old boiler. <strong style="color:#d32f2f;">Mounting brackets and inox hoses are not included.</strong></p>';
         $output .= '</div>';
         
         return $output;
