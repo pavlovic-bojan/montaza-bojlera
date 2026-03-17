@@ -149,7 +149,6 @@ final class WM_Montaza_Bojlera {
         // Cart
         add_filter('woocommerce_add_cart_item_data',  [$this, 'save_cart_item_data'], 10, 2);
         add_action('woocommerce_cart_calculate_fees', [$this, 'add_montaza_fee']);
-        add_filter('woocommerce_cart_item_name',      [$this, 'filter_cart_item_name'], 10, 3);
         add_filter('woocommerce_get_item_data',       [$this, 'filter_item_data'], 10, 2);
 
         // Checkout
@@ -531,28 +530,6 @@ final class WM_Montaza_Bojlera {
             // Third param: taxable. Set to true if your store charges VAT on installation services.
             $cart->add_fee(__('Montaža bojlera', 'wm-montaza-bojlera'), $total, false);
         }
-    }
-
-    /**
-     * Appends a formatted montaza badge to the cart item product name (HTML context).
-     *
-     * @param string $name          Product name HTML.
-     * @param array  $cart_item     Cart item data.
-     * @param string $cart_item_key Cart item hash key.
-     *
-     * @return string
-     */
-    public function filter_cart_item_name(string $name, array $cart_item, string $cart_item_key): string {
-        if (!empty($cart_item['wm_montaza'])) {
-            $price = isset($cart_item['wm_montaza_price'])
-                ? (float) $cart_item['wm_montaza_price']
-                : (float) get_option('wm_montaza_price', 7800);
-
-            $name .= '<br><small class="wm-montaza-cart-badge">+ '
-                . esc_html__('Montaža bojlera', 'wm-montaza-bojlera')
-                . ' (' . wp_kses_post(wc_price($price)) . ')</small>';
-        }
-        return $name;
     }
 
     /**
