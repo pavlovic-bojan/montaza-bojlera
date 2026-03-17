@@ -150,6 +150,7 @@ final class WM_Montaza_Bojlera {
         add_filter('woocommerce_add_cart_item_data',  [$this, 'save_cart_item_data'], 10, 2);
         add_action('woocommerce_cart_calculate_fees', [$this, 'add_montaza_fee']);
         add_filter('woocommerce_get_item_data',       [$this, 'filter_item_data'], 10, 2);
+        add_filter('woocommerce_cart_subtotal',       [$this, 'filter_mini_cart_subtotal'], 10, 3);
 
         // Checkout
         add_action('woocommerce_review_order_before_cart_contents', [$this, 'render_checkout_checkboxes']);
@@ -530,6 +531,43 @@ final class WM_Montaza_Bojlera {
             // Third param: taxable. Set to true if your store charges VAT on installation services.
             $cart->add_fee(__('Montaža bojlera', 'wm-montaza-bojlera'), $total, false);
         }
+    }
+
+    /**
+     * Modifies the displayed subtotal in the mini-cart widget to include the
+     * montaza fee so that "Svega" reflects the actual amount the customer pays.
+     *
+     * Uses doing_action() to restrict the modification strictly to the mini-cart
+     * widget context — the full cart/checkout page is unaffected because there
+     * the fee already appears as a separate line item.
+     *
+     * @param string   $cart_subtotal Formatted subtotal HTML.
+     * @param bool     $compound      Whether the subtotal is compound.
+     * @param \WC_Cart $cart          Current cart instance.
+     *
+     * @return string
+     */
+    public function filter_mini_cart_subtotal(string $cart_subtotal, bool $compound, \WC_Cart $cart): string {
+        if (!doing_action('woocommerce_widget_shopping_cart_total')) {
+            return $cart_subtotal;
+        }
+
+        $fee_total = 0.0;
+        foreach ($cart->get_cart() as $cart_item) {
+            if (!empty($cart_item['wm_montaza'])) {
+                $price      = isset($cart_item['wm_montaza_price'])
+                    ? (float) $cart_item['wm_montaza_price']
+                    : (float) get_option('wm_montaza_price', 7800);
+                $fee_total += $price * (int) $cart_item['quantity'];
+            }
+        }
+
+        if ($fee_total <= 0.0) {
+            return $cart_subtotal;
+        }
+
+        $subtotal = $cart->get_subtotal();
+        return wc_price($subtotal + $fee_total);
     }
 
     /**
