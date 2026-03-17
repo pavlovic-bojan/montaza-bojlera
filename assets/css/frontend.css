@@ -1,0 +1,73 @@
+/* ==========================================================================
+   Montaža Bojlera – Frontend Styles
+   ========================================================================== */
+
+/* Product page checkbox block */
+.wm-montaza-checkbox {
+    margin-bottom: 10px;
+}
+
+.wm-montaza-checkbox label {
+    cursor: pointer;
+}
+
+.wm-montaza-checkbox input[type="checkbox"] {
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
+.wm-montaza-checkbox small {
+    display: block;
+    margin-top: 4px;
+}
+
+.wm-montaza-highlight {
+    color: #d32f2f;
+}
+
+/* Shortcode info block */
+.wm-montaza-info {
+    margin: 15px 0;
+    padding: 15px;
+    background: #f9f9f9;
+    border-left: 3px solid #d32f2f;
+}
+
+.wm-montaza-info p {
+    margin: 0 0 10px 0;
+}
+
+.wm-montaza-info p:last-child {
+    margin-bottom: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Checkout order-review row */
+.wm-montaza-checkout-row td {
+    padding-left: 20px !important;
+}
+
+.wm-montaza-checkout-row label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+    margin: 0;
+}
+
+.wm-montaza-checkout-row input[type="checkbox"] {
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+.wm-montaza-checkout-row small {
+    display: block;
+    margin-top: 3px;
+    color: #666;
+}
+
+/* Cart item inline montaza badge */
+.wm-montaza-cart-badge {
+    color: #666;
+}
